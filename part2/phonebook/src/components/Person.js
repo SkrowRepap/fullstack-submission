@@ -2,8 +2,9 @@ import React from 'react';
 
 
 const Person = (props) => {
+
     return (
-        <p>
+        <p className="inline">
             {`${props.name} - ${props.number}`}
         </p>
     )

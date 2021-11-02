@@ -4,71 +4,120 @@ import Form from './components/Form.js';
 import Person from './components/Person';
 import Filter from './components/Filter.js';
 import axios from 'axios';
+import contactservice from './services/contactservice';
+import Notify from './components/Notification';
+import ButtonDelete from './components/Button';
+
 
 
 function App () {
 
   const [persons, setPersons] = useState([])
 
-  const [filterPersons, setFilter] = useState([])
+  const [filterPersons, setFilter] = useState(null)
 
   const [newName, setNewName] = useState('')
 
   const [newNumber, setNumber] = useState('')
 
-  const [newfilter, setNewFilter] = useState('')
+  const [findName, setFindName] = useState(null)
+
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     axios
       .get("http://localhost:3001/persons")
       .then((response) => {
-        console.log('success', response)
         const contact = response.data
         setPersons(contact)
       })
 
-  },[])
+  },[persons])
+
+  useEffect(() => {
+    contactservice
+      .getContact(findName)
+      .then(data => {
+        setFilter(data)
+      })
+  }, [findName])
 
   const addPerson = (e) => {
-
     e.preventDefault()
 
     const person = {
-      id: persons.length + 1,
       number: newNumber,
       name: newName,
     }
     
-    let hasDuplicates = persons.filter((current) => {
-      return current.name === person.name
-    })
+    let hasDuplicates = persons.find(current => current.name === person.name)
 
-    if(hasDuplicates.length === 1) {
-      alert(`${newName} already exists!`)
-    }
-    else {
-    setPersons(persons.concat(person))
+    if(hasDuplicates) {
+      let update = window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)
+      if (update) {
+        contactservice
+          .updateContact(hasDuplicates.id, person)
+          .then((data) => {
+            setPersons(persons.map(person => person.id !== hasDuplicates.id ? person : data))
+            const notif = {
+              contactName: newName,
+              tag: 'Success',
+              message: 'succesfully updated!'
+            }
+            setNotification(notif)
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+          })
+          .catch(() => {
+            const notif = {
+              contactName: newName,
+              tag: 'Error',
+              message: 'was already deleted to the server!'
+            }
+            setNotification(notif)
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+          })
+      }
+
+    } else {
+
+      contactservice
+        .addContact(person)
+        .then(data => setPersons(persons.concat(data)))
+        .then(() => {
+              const notif = {
+                contactName: newName,
+                tag: 'Success',
+                message: 'succesfully added!'
+              }
+          setNotification(notif)
+          setTimeout(() => {
+          setNotification(null)
+          }, 5000)
+        })
+
     setNewName('')
     setNumber('')
     }
   }
 
-  const filtered = (e) => {
-    e.preventDefault()
-    let filtered = persons.filter((person) => person.name === newfilter)
-    setFilter(filterPersons.concat(filtered));
-    setNewFilter('')
-  }
 
   return (
     <div>
       {/* Filter */}
       <Filter 
-        onSubmit={filtered}
-        filterValue={newfilter}
-        onFilterChange={(e) => setNewFilter(e.target.value)}
+        filterValue={findName}
+        onFilterChange={(e) => setFindName(e.target.value)}
         filtered={filterPersons}/>
+
+
       {/* Phonebook */}
+
+      {notification ?
+        <Notify tag={notification.tag} message={notification.message} contactName={notification.contactName}/> : null }
       <h2>Phonebook</h2>
       <Form 
         onSubmit={addPerson}
@@ -79,8 +128,14 @@ function App () {
       
       {/* Numbers */}
       <h2>Numbers</h2>
-      {persons.map((person) => 
-        <Person key={person.id} name={person.name} number={person.number}/>
+      {persons.map((person) => {
+        return (
+          <div classname="margin-bottom-10px" key={person.id}>
+        <Person  name={person.name} number={person.number}/>
+        <ButtonDelete id={person.id} name={person.name} updateNotif={notif => setNotification(notif)}/>
+        </div>
+        )
+      }
       )}
     </div>
   )

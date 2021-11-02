@@ -5,10 +5,10 @@ const Form = (props) => {
     return (
     <form onSubmit={props.onSubmit}>
         <div>
-                name: <input value={props.personValue} onChange={props.onPersonChange} />
+                Name: <input value={props.personValue} onChange={props.onPersonChange} required="required" />
         </div>
         <div>
-                number: <input value={props.numberValue} onChange={props.onNumberChange} />
+                Number: <input value={props.numberValue} onChange={props.onNumberChange} required="required"/>
         </div>
         <div>
             <button name="submit" type="submit">add</button>
