@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
-const baseUrl = `http://localhost:3001/persons`
+// const baseUrl = `http://localhost:3001/api/persons`
+const baseUrl = `/api/persons`
 
 const addContact = contactObject => {
     const request = axios.post(baseUrl,contactObject)

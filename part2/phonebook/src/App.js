@@ -24,15 +24,15 @@ function App () {
 
   const [notification, setNotification] = useState(null)
 
-  useEffect(() => {
+  useEffect( () => {
     axios
-      .get("http://localhost:3001/persons")
+      .get("http://localhost:3001/api/persons")
       .then((response) => {
         const contact = response.data
         setPersons(contact)
       })
-
   },[persons])
+
 
   useEffect(() => {
     contactservice
