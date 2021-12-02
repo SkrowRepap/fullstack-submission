@@ -1,0 +1,39 @@
+
+GET http://localhost:3003/api/user
+
+###
+POST http://localhost:3003/api/user
+Content-Type: application/json
+
+{
+    "name": "cj",
+    "username": "cjay1125",
+    "password": "cjay123"
+}
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNqYXkxMTI1IiwiaWQiOiI2MWE3OGExMjEzZjYxMGRmZjE3MWFjNjAiLCJpYXQiOjE2Mzg0MTU0MTl9.YD_9pHKMVXc_9ZvGrHoY65Ij--PaEoyX18mz9fbNU_4
+
+{
+    "title": "React patterns",
+    "author": "Michael Chan",
+    "url": "https://reactpatterns.com/",
+    "likes": 7
+}
+
+
+###
+GET http://localhost:3003/api/blogs
+
+
+
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "cjay1125",
+    "password": "cjay123"
+}
