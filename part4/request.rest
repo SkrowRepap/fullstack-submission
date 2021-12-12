@@ -37,3 +37,7 @@ Content-Type: application/json
     "username": "cjay1125",
     "password": "cjay123"
 }
+
+###
+GET http://localhost:3003/api/blogs/userBlogs
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNqYXkxMTI1IiwiaWQiOiI2MWE3OGExMjEzZjYxMGRmZjE3MWFjNjAiLCJpYXQiOjE2Mzg2MjczNzh9.2awTLLyBSaTT0nFkwEckIZEj7LWOQpaR3DN_q_kqwPQ

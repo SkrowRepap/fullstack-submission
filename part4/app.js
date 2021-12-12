@@ -7,11 +7,9 @@ const PORT = config.PORT
 
 const server = http.createServer(app)
 
-if (process.env.NODE_ENV !== "test") {
-    server.listen(PORT, () => {
-        logger.info(`Server running on PORT ${PORT}`)
-    })
-}
+server.listen(PORT, () => {
+    logger.info(`Server running on PORT ${PORT}`)
+})
 
 
 module.exports = app

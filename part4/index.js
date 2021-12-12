@@ -29,6 +29,10 @@ app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
 
+if (process.env.NODE_ENV === 'test') {
+    const resetRouter = require('./controller/resetRouter')
+    app.use('/api/testing', resetRouter)
+}
 app.use("/api/blogs", middleware.userExtractor, blogsRouter)
 app.use("/api/user", userRouter)
 app.use("/api/login", loginRouter)

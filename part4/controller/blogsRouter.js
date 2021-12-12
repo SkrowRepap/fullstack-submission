@@ -12,10 +12,12 @@ blogsRouter.get("/", async (request, response) => {
     response.json(blogs)
 })
 
-blogsRouter.get("/:id", async (request, response) => {
-    const blogs = await Blog.findById(request.params.id)
-    response.json(blogs)
+blogsRouter.get("/userBlogs", async (request, response) => {
+    const user = await request.user
+    const result = await Blog.find({user: {$in: [user.id]}}).populate('user', { name: 1, username: 1 })
+    response.json(result)
 })
+
 
 blogsRouter.post("/", async (request, response) => {
     const body = request.body
@@ -63,12 +65,10 @@ blogsRouter.delete("/:id", async (request, response) => {
         })
     }
 
-    await Blog.findByIdAndDelete(blog.id)
+    const result = await Blog.findByIdAndDelete(blog.id)
     response
         .status(200)
-        .send({
-            success: "deleted successfully"
-        })
+        .json(result)
 
 
 
